@@ -80,8 +80,9 @@ module Mountebank
       elsif predicate.is_a? Mountebank::Stub::Predicate
         predicates << predicate
       end
-
-      @stubs << Mountebank::Stub.create(responses, predicates)
+      stub = Mountebank::Stub.create(responses, predicates)
+      @stubs.reject! {|stb| stb.predicates[0].equals[:path] == stub.predicates[0].equals[:path] && stb.predicates[0].equals[:method] == stub.predicates[0].equals[:method]}
+      @stubs << stub
     end
 
     def replayable_data
